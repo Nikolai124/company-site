@@ -1,0 +1,130 @@
+{% extends "main/base.html" %}
+{% load humanize %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero__inner">
+    <div>
+      <h1 class="hero__title">{{ site.hero_title|default:"Уборка, после которой хочется жить дома" }}</h1>
+      <p class="hero__subtitle">{{ site.hero_subtitle|default:"" }}</p>
+      <div class="hero__actions">
+        <a href="#contact" class="btn">Рассчитать стоимость</a>
+        <a href="#services" class="btn btn--light">Услуги и цены</a>
+      </div>
+      <ul class="hero__stats">
+        <li><b>1 200+</b><span>уборок в год</span></li>
+        <li><b>4.9</b><span>средняя оценка</span></li>
+        <li><b>2 часа</b><span>приезд после заявки</span></li>
+      </ul>
+    </div>
+    <div class="hero__card">
+      <p class="hero__card-title">Почему нам доверяют</p>
+      <ul class="checklist">
+        <li>Фиксированная цена до начала работ</li>
+        <li>Своя гипоаллергенная химия</li>
+        <li>Проверенные сотрудники с договором</li>
+        <li>Переделаем бесплатно, если что-то не так</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="container">
+    <h2 class="section__title">Услуги и цены</h2>
+    <p class="section__lead">Цена зависит от площади и состояния помещения. Точную сумму назовём после короткого разговора.</p>
+    <div class="services">
+      {% for service in services %}
+        <article class="service">
+          <div class="service__icon">{% include "main/icon.html" with name=service.icon %}</div>
+          <h3 class="service__title">{{ service.title }}</h3>
+          <p class="service__text">{{ service.description }}</p>
+          <p class="service__price">от {{ service.price_from|intcomma }} ₽{% if service.unit %} <span>{{ service.unit }}</span>{% endif %}</p>
+          <a href="#contact" class="service__link" data-service="{{ service.pk }}">Заказать →</a>
+        </article>
+      {% empty %}
+        <p>Услуги скоро появятся.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--tinted" id="steps">
+  <div class="container">
+    <h2 class="section__title">Как мы работаем</h2>
+    <ol class="steps">
+      <li class="step"><span class="step__num">1</span><h3>Заявка</h3><p>Оставляете заявку на сайте или звоните нам.</p></li>
+      <li class="step"><span class="step__num">2</span><h3>Расчёт</h3><p>Уточняем детали и называем точную цену.</p></li>
+      <li class="step"><span class="step__num">3</span><h3>Уборка</h3><p>Приезжаем в удобное время со всем инвентарём.</p></li>
+      <li class="step"><span class="step__num">4</span><h3>Приёмка</h3><p>Вы проверяете результат и только потом платите.</p></li>
+    </ol>
+  </div>
+</section>
+
+{% if reviews %}
+<section class="section" id="reviews">
+  <div class="container">
+    <h2 class="section__title">Отзывы клиентов</h2>
+    <div class="reviews">
+      {% for review in reviews %}
+        <blockquote class="review">
+          <div class="review__stars" aria-label="Оценка {{ review.rating }} из 5">{% for i in "12345" %}<span class="{% if forloop.counter <= review.rating %}is-on{% endif %}">★</span>{% endfor %}</div>
+          <p>{{ review.text }}</p>
+          <footer>{{ review.author }}</footer>
+        </blockquote>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if faqs %}
+<section class="section section--tinted" id="faq">
+  <div class="container container--narrow">
+    <h2 class="section__title">Частые вопросы</h2>
+    <div class="faq">
+      {% for faq in faqs %}
+        <details class="faq__item">
+          <summary>{{ faq.question }}</summary>
+          <p>{{ faq.answer|linebreaksbr }}</p>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section" id="contact">
+  <div class="container contact">
+    <div>
+      <h2 class="section__title section__title--left">Оставьте заявку</h2>
+      <p class="section__lead section__lead--left">Перезвоним в течение 15 минут в рабочее время и рассчитаем стоимость.</p>
+      <ul class="contact__info">
+        {% if site.phone %}<li><span>Телефон</span><a href="tel:{{ site.phone }}">{{ site.phone }}</a></li>{% endif %}
+        {% if site.work_hours %}<li><span>Работаем</span>{{ site.work_hours }}</li>{% endif %}
+        {% if site.address %}<li><span>Офис</span>{{ site.address }}</li>{% endif %}
+      </ul>
+    </div>
+
+    <form class="form" method="post" action="/#contact" novalidate>
+      {% csrf_token %}
+      {% for message in messages %}
+        <p class="form__message form__message--{{ message.tags }}">{{ message }}</p>
+      {% endfor %}
+      {% for field in form.visible_fields %}
+        {% if field.name == "website" %}
+          <div class="form__trap" aria-hidden="true">{{ field }}</div>
+        {% else %}
+          <label class="form__field{% if field.errors %} has-error{% endif %}">
+            <span>{{ field.label }}{% if field.field.required %} *{% endif %}</span>
+            {{ field }}
+            {% for error in field.errors %}<small class="form__error">{{ error }}</small>{% endfor %}
+          </label>
+        {% endif %}
+      {% endfor %}
+      <button type="submit" class="btn btn--wide">Отправить заявку</button>
+      <p class="form__note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,2 @@
+# build.sh должен попасть на Render с LF-переносами, иначе bash упадёт на \r
+*.sh text eol=lf
