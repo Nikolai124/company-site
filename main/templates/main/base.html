@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{{ site.company_name|default:"Клининг" }} — уборка квартир и офисов{% endblock %}</title>
   <meta name="description" content="{{ site.hero_subtitle|default:''|truncatechars:150 }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
 </head>
 <body>
@@ -15,10 +12,10 @@
     <div class="container header__inner">
       <a href="/" class="logo"><span class="logo__mark">✦</span>{{ site.company_name|default:"Чисто" }}</a>
       <nav class="nav" id="nav">
-        <a href="#services">Услуги</a>
-        <a href="#steps">Как работаем</a>
-        <a href="#reviews">Отзывы</a>
-        <a href="#faq">Вопросы</a>
+        <a href="/#services">Услуги</a>
+        <a href="/#steps">Как работаем</a>
+        <a href="/#reviews">Отзывы</a>
+        <a href="/#faq">Вопросы</a>
         {% if site.phone %}<a class="nav__phone" href="tel:{{ site.phone }}">{{ site.phone }}</a>{% endif %}
       </nav>
       <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
@@ -32,6 +29,11 @@
       <div>
         <div class="logo logo--light"><span class="logo__mark">✦</span>{{ site.company_name|default:"Чисто" }}</div>
         <p class="footer__muted">© {% now "Y" %}. Все права защищены.</p>
+        <p class="footer__muted">Демо-проект: компания вымышленная.</p>
+        <div class="footer__links">
+          <a href="{% url 'privacy' %}">Политика конфиденциальности</a>
+          <a href="{% url 'consent' %}">Согласие на обработку данных</a>
+        </div>
       </div>
       <div class="footer__contacts">
         {% if site.phone %}<a href="tel:{{ site.phone }}">{{ site.phone }}</a>{% endif %}

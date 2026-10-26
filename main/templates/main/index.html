@@ -111,9 +111,18 @@
       {% for message in messages %}
         <p class="form__message form__message--{{ message.tags }}">{{ message }}</p>
       {% endfor %}
+      <p class="form__demo">Это демо-сайт, компания вымышленная. Не вводите настоящие данные: подойдёт любое имя и номер.</p>
       {% for field in form.visible_fields %}
         {% if field.name == "website" %}
           <div class="form__trap" aria-hidden="true">{{ field }}</div>
+        {% elif field.name == "consent" %}
+          <div>
+            <label class="form__check{% if field.errors %} has-error{% endif %}">
+              {{ field }}
+              <span>Даю <a href="{% url 'consent' %}" target="_blank">согласие на обработку персональных данных</a> *</span>
+            </label>
+            {% for error in field.errors %}<small class="form__error">{{ error }}</small>{% endfor %}
+          </div>
         {% else %}
           <label class="form__field{% if field.errors %} has-error{% endif %}">
             <span>{{ field.label }}{% if field.field.required %} *{% endif %}</span>
@@ -123,7 +132,7 @@
         {% endif %}
       {% endfor %}
       <button type="submit" class="btn btn--wide">Отправить заявку</button>
-      <p class="form__note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+      <p class="form__note">Как мы обращаемся с данными, написано в <a href="{% url 'privacy' %}" target="_blank">политике конфиденциальности</a>.</p>
     </form>
   </div>
 </section>

@@ -38,3 +38,11 @@ def index(request):
         "form": form,
     }
     return render(request, "main/index.html", context)
+
+
+def privacy(request):
+    return render(request, "main/privacy.html")
+
+
+def consent(request):
+    return render(request, "main/consent.html")

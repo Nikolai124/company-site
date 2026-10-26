@@ -8,6 +8,10 @@ from .models import Lead, Service
 class LeadForm(forms.ModelForm):
     # Поле-ловушка для спам-ботов: человек его не видит
     website = forms.CharField(required=False, widget=forms.TextInput(attrs={"tabindex": "-1", "autocomplete": "off"}))
+    consent = forms.BooleanField(
+        required=True,
+        error_messages={"required": "Без согласия на обработку данных мы не сможем принять заявку"},
+    )
 
     class Meta:
         model = Lead
